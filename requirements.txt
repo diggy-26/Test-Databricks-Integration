@@ -1,0 +1,5 @@
+# Required dependencies for Delta Lake and Parquet file operations
+# These are typically pre-installed on Azure Databricks clusters
+
+pyspark>=3.3.0
+delta-spark>=2.3.0
