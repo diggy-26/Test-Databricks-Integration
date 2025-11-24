@@ -1,0 +1,14 @@
+environment: databricks
+
+data_source:
+  type: delta
+  path: /mnt/data/sample_table
+
+workflow:
+  name: "Databricks Production Workflow"
+  description: "Production workflow running on Azure Databricks cluster"
+
+cluster:
+  spark_version: "13.3.x-scala2.12"
+  node_type_id: "Standard_DS3_v2"
+  num_workers: 1

@@ -1,0 +1,9 @@
+environment: local
+
+data_source:
+  type: local
+  path: ./config/data/sample.csv
+
+workflow:
+  name: "Local Test Workflow"
+  description: "Development workflow using mocked data sources"
