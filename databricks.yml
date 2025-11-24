@@ -14,15 +14,6 @@ resources:
     oos_workflow_job:
       name: "OOS Workflow Job"
       
-      # Use existing compute cluster
-      # Alternatively, uncomment job_clusters below to create ephemeral cluster
-      # job_clusters:
-      #   - job_cluster_key: "oos_cluster"
-      #     new_cluster:
-      #       spark_version: "13.3.x-scala2.12"
-      #       node_type_id: "Standard_DS3_v2"
-      #       num_workers: 1
-      
       # Define workflow tasks
       tasks:
         - task_key: "run_workflow"
@@ -32,18 +23,10 @@ resources:
           python_wheel_task:
             package_name: "oos_workflow"
             entry_point: "main"
-            parameters: ["--env", "databricks"]
           
           # Install wheel package as library
           libraries:
             - whl: ./dist/*.whl
-      
-      # Job settings
-      max_concurrent_runs: 1
-      timeout_seconds: 3600
-      email_notifications:
-        on_failure: []
-        on_success: []
 
 # Define deployment targets
 targets:
