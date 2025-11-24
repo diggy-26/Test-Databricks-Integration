@@ -1,11 +1,12 @@
 bundle:
   name: oos-workflow
 
-# Define wheel artifact
+# Define wheel artifact (use pre-built wheel, don't build during deploy)
 artifacts:
   default:
     type: whl
-    path: dist/oos_workflow-0.1.0-py3-none-any.whl
+    path: .
+    build: uv build
 
 # Define Databricks resources
 resources:
@@ -13,24 +14,19 @@ resources:
     oos_workflow_job:
       name: "OOS Workflow Job"
       
-      # Define ephemeral job cluster
-      job_clusters:
-        - job_cluster_key: "oos_cluster"
-          new_cluster:
-            spark_version: "13.3.x-scala2.12"
-            node_type_id: "Standard_DS3_v2"
-            num_workers: 1
-            spark_conf:
-              "spark.databricks.cluster.profile": "singleNode"
-              "spark.master": "local[*]"
-            custom_tags:
-              "project": "oos-workflow"
-              "environment": "dev"
+      # Use existing compute cluster
+      # Alternatively, uncomment job_clusters below to create ephemeral cluster
+      # job_clusters:
+      #   - job_cluster_key: "oos_cluster"
+      #     new_cluster:
+      #       spark_version: "13.3.x-scala2.12"
+      #       node_type_id: "Standard_DS3_v2"
+      #       num_workers: 1
       
       # Define workflow tasks
       tasks:
         - task_key: "run_workflow"
-          job_cluster_key: "oos_cluster"
+          existing_cluster_id: "<Cluster-ID>"  # Test ADB Container Application Cluster
           
           # Python wheel task configuration
           python_wheel_task:
@@ -40,7 +36,7 @@ resources:
           
           # Install wheel package as library
           libraries:
-            - whl: "../artifacts/default/dist/oos_workflow-0.1.0-py3-none-any.whl"
+            - whl: ./dist/*.whl
       
       # Job settings
       max_concurrent_runs: 1
@@ -54,7 +50,7 @@ targets:
   dev:
     mode: development
     workspace:
-      host: https://adb-<workspace-id>.azuredatabricks.net
+      host: https://adb-<Workspace-ID>.azuredatabricks.net
       # Note: Authentication should be configured via Databricks CLI
       # Run: databricks configure --token
     
@@ -67,7 +63,7 @@ targets:
   prod:
     mode: production
     workspace:
-      host: https://adb-<workspace-id>.azuredatabricks.net
+      host: https://adb-<Workspace-ID>.azuredatabricks.net
     
     resources:
       jobs:
@@ -76,4 +72,4 @@ targets:
           # Production-specific settings
           max_concurrent_runs: 3
           email_notifications:
-            on_failure: ["team@example.com"]
+            on_failure: ["<Email-Address>"]
