@@ -6,4 +6,12 @@ to Azure Databricks using Databricks Asset Bundles (DAB).
 """
 
 __version__ = "0.1.0"
-__all__ = ["__version__"]
+
+
+def main():
+    """Entry point wrapper for Databricks."""
+    from .main import main as _main
+    return _main()
+
+
+__all__ = ["__version__", "main"]

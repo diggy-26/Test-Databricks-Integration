@@ -51,7 +51,7 @@ databricks configure --token
 # Host: https://adb-<Workspace-ID>.azuredatabricks.net
 # Token: <from User Settings → Developer -> Generate Access Tokens>
 
-# Validate bundle configuration
+# Validate bundle configuration after subtituting placeholders in databricks.yml
 databricks bundle validate -t dev
 
 # Deploy wheel and job definition to workspace
