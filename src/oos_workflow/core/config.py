@@ -16,15 +16,17 @@ class ConfigurationError(Exception):
 class ConfigLoader:
     """Loads and validates YAML configuration files."""
     
-    def __init__(self, config_dir: str = "config"):
+    def __init__(self, config_dir: str = "config", allow_missing: bool = False):
         """
         Initialize configuration loader.
         
         Args:
             config_dir: Directory containing configuration files
+            allow_missing: If True, use default configs when directory is missing
         """
         self.config_dir = Path(config_dir)
-        if not self.config_dir.exists():
+        self.allow_missing = allow_missing
+        if not self.config_dir.exists() and not allow_missing:
             raise ConfigurationError(f"Configuration directory not found: {config_dir}")
     
     def load(self, environment: str) -> Dict[str, Any]:
@@ -43,6 +45,9 @@ class ConfigLoader:
         config_file = self.config_dir / f"{environment}.yaml"
         
         if not config_file.exists():
+            if self.allow_missing:
+                print(f"⚠️  Config file not found, using defaults for {environment}")
+                return self._get_default_config(environment)
             raise ConfigurationError(f"Configuration file not found: {config_file}")
         
         try:
@@ -92,18 +97,55 @@ class ConfigLoader:
         
         if "path" not in data_source:
             raise ConfigurationError("Missing required field: data_source.path")
+    
+    def _get_default_config(self, environment: str) -> Dict[str, Any]:
+        """
+        Generate default configuration for environment.
+        
+        Args:
+            environment: Environment name
+            
+        Returns:
+            Default configuration dictionary
+        """
+        if environment == "local":
+            return {
+                "environment": "local",
+                "data_source": {
+                    "type": "csv",
+                    "path": "config/data/sample.csv"
+                },
+                "output": {
+                    "display": True
+                }
+            }
+        elif environment == "databricks":
+            return {
+                "environment": "databricks",
+                "data_source": {
+                    "type": "delta",
+                    "path": "/tmp/sample_data"
+                },
+                "output": {
+                    "display": True,
+                    "save_to": "/tmp/workflow_output"
+                }
+            }
+        else:
+            raise ConfigurationError(f"No default config available for environment: {environment}")
 
 
-def load_config(environment: str, config_dir: str = "config") -> Dict[str, Any]:
+def load_config(environment: str, config_dir: str = "config", allow_missing: bool = True) -> Dict[str, Any]:
     """
     Convenience function to load configuration.
     
     Args:
         environment: Environment name
         config_dir: Configuration directory path
+        allow_missing: If True, use default configs when directory/files are missing
         
     Returns:
         Configuration dictionary
     """
-    loader = ConfigLoader(config_dir)
+    loader = ConfigLoader(config_dir, allow_missing=allow_missing)
     return loader.load(environment)
