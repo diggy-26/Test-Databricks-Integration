@@ -9,6 +9,9 @@ dependencies = [
     "pyyaml==6.0.1",
 ]
 
+[project.scripts]
+main = "oos_workflow.main:main"
+
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
