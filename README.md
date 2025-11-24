@@ -43,17 +43,30 @@ uv build
 ### Deploy to Azure Databricks
 
 ```bash
-# Authenticate Databricks CLI
+# Install Databricks CLI (one-time setup)
+pip install databricks-cli
+
+# Configure authentication (provide workspace URL and personal access token)
 databricks configure --token
+# Host: https://adb-<Workspace-ID>.azuredatabricks.net
+# Token: <from User Settings → Developer -> Generate Access Tokens>
 
-# Validate DAB bundle configuration
-databricks bundle validate
+# Validate bundle configuration
+databricks bundle validate -t dev
 
-# Deploy to Azure Databricks workspace
-databricks bundle deploy --target dev
+# Deploy wheel and job definition to workspace
+databricks bundle deploy -t dev
 
-# Run workflow on ephemeral ADB cluster
-databricks bundle run oos_workflow_job --target dev
+# This will:
+# - Upload the wheel to Databricks workspace
+# - Create/update the job definition
+# - Configure libraries and cluster settings
+
+# Run the workflow on your cluster
+databricks bundle run -t dev oos_workflow_job
+
+# Or trigger from the Databricks UI:
+# Jobs & Pipelines → "OOS Workflow Job (Dev)" → Run Now
 ```
 
 ## Project Structure
