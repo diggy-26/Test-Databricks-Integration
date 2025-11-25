@@ -11,8 +11,6 @@ This project follows four core constitutional principles:
 3. **Deterministic Dev & Prod**: Identical Python versions and locked dependencies ensure consistent behavior across environments
 4. **Code Quality & Structure**: Clean repository hierarchy (`src/`, `tests/`, `config/`) with pinned dependencies
 
-See [`.specify/memory/constitution.md`](.specify/memory/constitution.md) for complete details.
-
 ## Quick Start for Developers
 
 ### Prerequisites
@@ -99,15 +97,6 @@ This project uses an **adapter pattern** to enable the same codebase to run in b
 - **Adapters** (`src/oos_workflow/adapters/`): Pluggable implementations for local (mocks) vs. Databricks (real Spark APIs)
 - **Configuration** (`config/*.yaml`): Environment-specific settings loaded at runtime
 - **Databricks Asset Bundle** (`databricks.yml`): Declarative deployment configuration for jobs, clusters, and artifacts
-
-## Detailed Documentation
-
-- **Feature Specification**: See `specs/001-adb-wheel-package/spec.md` for requirements
-- **Implementation Plan**: See `specs/001-adb-wheel-package/plan.md` for technical design
-- **Quick Start Guide**: See `specs/001-adb-wheel-package/quickstart.md` for step-by-step setup
-- **Research Findings**: See `specs/001-adb-wheel-package/research.md` for technology decisions
-
-For feature development workflow, see `.specify/templates/` for specification, planning, and task templates.
 
 ## Troubleshooting
 
