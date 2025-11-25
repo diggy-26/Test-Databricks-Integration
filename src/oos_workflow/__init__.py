@@ -5,7 +5,7 @@ This package demonstrates packaging Python applications as wheels and deploying
 to Azure Databricks using Databricks Asset Bundles (DAB).
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def main():
